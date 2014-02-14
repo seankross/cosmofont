@@ -1,0 +1,12 @@
+Package: cosmofont
+Title: Create Font Stylesheets with Data URIs
+Type: Package
+Description: cosmofont allows you to take your favorite fonts and transform
+    them into data URI containing stylesheets for use anywhere on or off the web. 
+Version: 0.1
+Author: Sean Kross with significant contributions from Ramnath Vaidyanathan
+Maintainer: Sean Kross <smk240@gmail.com>
+Depends: R (>= 3.0.2)
+Imports:
+    base64enc
+License: GPL-2
