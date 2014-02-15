@@ -28,7 +28,7 @@ cosmofont_easy <- function(font_dir=getwd(), weight=400, style="normal", export_
 }
 
 #'
-font_options  <- function(font_name=NULL, bold=F, italic=F, weight=400, path){
+font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
   # Determine file extension
   ext <- str_extract(basename(path), "\\..{3,4}$")
   
@@ -50,10 +50,14 @@ font_options  <- function(font_name=NULL, bold=F, italic=F, weight=400, path){
     weight <- 700
   }
   
+  # Convert file to raw
+  font_file <- file(path, "rb")
+  font_bin <- readBin(font_file, "raw", n=file.info(path)$size)
+  close(font_file)
   
   # Return font option object
   list(name = font_name, weight = weight, style = font_style, format = font_format, 
-       file = path)
+       file = font_bin)
 }
 
 #'
