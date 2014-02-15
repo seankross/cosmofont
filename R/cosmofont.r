@@ -28,8 +28,32 @@ cosmofont_easy <- function(font_dir=getwd(), weight=400, style="normal", export_
 }
 
 #'
-font_options  <- function(){
+font_options  <- function(font_name=NULL, bold=F, italic=F, weight=400, path){
+  # Determine file extension
+  ext <- str_extract(basename(path), "\\..{3,4}$")
   
+  # Do we need to generate a name?
+  if(is.null(font_name)){
+    font_name <- sub(ext, "", basename(path), font_name)
+  }
+  
+  # Prune extension
+  font_format <- sub(".", "", ext)
+  
+  # Determine style
+  if(italic){
+    font_style <- "italic"
+  } else {
+    font_style <- "normal"
+  }
+  if(weight==400 && bold){
+    weight <- 700
+  }
+  
+  
+  # Return font option object
+  list(name = font_name, weight = weight, style = font_style, format = font_format, 
+       file = path)
 }
 
 #'
@@ -50,6 +74,7 @@ google_font_options <- function(font_name, bold=F, italic=F, weight=400){
     font_query <- paste0(font_query, weight)
   } else if(bold){
     font_query <- paste0(font_query, "b")
+    weight <- 700
   }
   
   # Make GET request for CSS
@@ -59,10 +84,21 @@ google_font_options <- function(font_name, bold=F, italic=F, weight=400){
   url <- sub("url\\(", "", str_extract(content(response, "text"), perl("url([^)]+)")))
   
   # Make GET request for font file
-  font_file <- GET(url)
+  # font_file <- GET(url)
   
+  # Determine style
+  if(italic){
+    font_style <- "italic"
+  } else {
+    font_style <- "normal"
+  }
   
-  list(name = font_name, weight = weight, style = style, format = 'tff', file = font_file, option = "google")
+  # Determine format
+  font_format <- sub(".", "", str_extract(url, "\\..{3,4}$") )
+  
+  # Return font option object
+  list(name = font_name, weight = weight, style = font_style, format = font_format, 
+       file = url)
 }
 
 space2plus <- function(word){
