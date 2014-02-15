@@ -84,7 +84,12 @@ google_font_options <- function(font_name, bold=F, italic=F, weight=400){
   url <- sub("url\\(", "", str_extract(content(response, "text"), perl("url([^)]+)")))
   
   # Make GET request for font file
-  # font_file <- GET(url)
+  font_file <- GET(url)
+  
+  # Store binary font file
+  # font_bin <- file(open="w+b")
+  # writeBin(content(GET(url), "raw"), font_bin)
+  # writeBin(font_file$content, "~/gu.ttf")
   
   # Determine style
   if(italic){
@@ -98,7 +103,7 @@ google_font_options <- function(font_name, bold=F, italic=F, weight=400){
   
   # Return font option object
   list(name = font_name, weight = weight, style = font_style, format = font_format, 
-       file = url)
+       file = font_file$content)
 }
 
 space2plus <- function(word){
