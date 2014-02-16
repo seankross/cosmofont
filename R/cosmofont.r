@@ -1,29 +1,33 @@
 #' Create a stylesheet with font URIs from a directory containing font files
 #' 
 #' 
-#' @param ... A series of \code{font_setting}s. See \link{\code{font_setting}}.
-#' @param font_dir Path to a directory containing one or more font files.
-#'     The default path is the working directory.
-#' @param weight font-weight for all fonts. Default value is 400.
-#' @param style font-style for all fonts. Default value is \code{"normal"}.
-#' @param export_path Path to export the stylesheet. The default path is the working directory.
+#' @param ... A series of \code{font_options}s. See \link{\code{font_options}}
+#'    and \link{\code{google_font_options}}.
+#' @param path Path to export the stylesheet. The default value is \code{NULL} which will cause 
+#'    the stylesheet to be created in the working directory.
+#' @param filename Name of exported stylesheet. The default value is \code{"stylesheet.css"}.
+#' @param uri If set to \code{TRUE} the stylesheet will contain data URIs for the fonts.
+#'    If set to \code{FALSE} font files will be coppied into the directory specified by \code{path}.
+#'    The default value is \code{FALSE}. 
 #' @export
+#' @importFrom base64enc dataURI
+#' @importFrom whisker whisker.render 
 #' @examples
 #' \dontrun{
 #' 
-#' cosmofont()
-#' cosmofont("~/Desktop/My_Fonts")
-#' cosmofont("~/Desktop/My_Fonts", weight=500, style="italic")
-#' cosmofont()
+#' roboto <- google_font_options("Roboto", italic=T)
+#' newscycle <- font_options("~/Desktop/newscycle.ttf")
+#' cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=T)
+#' 
 #' }
-cosmofont <- (..., uri=F){
+cosmofont <- (..., path=NULL, filename="stylesheet.css", uri=F){
   # Capture settings
   settings <- list(...)
 }
 
 #'
 
-cosmofont_easy <- function(font_dir=getwd(), weight=400, style="normal", export_path=getwd(), uri=F){
+cosmofont_easy <- function(path=NULL, dest=NULL, weight=400, style="normal", uri=F){
   
 }
 
@@ -112,4 +116,8 @@ google_font_options <- function(font_name, bold=F, italic=F, weight=400){
 
 space2plus <- function(word){
   sub(" ", "+", word, fixed=T)
+}
+
+file_sieve <- function(file){
+  grepl("\\.ttf|\\.eot|\\.woff", file)
 }
