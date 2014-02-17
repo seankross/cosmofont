@@ -1,8 +1,8 @@
 #' Create a stylesheet with custom settings using local and web fonts
 #' 
 #' 
-#' @param ... A series of \code{font_options}s. See \link{\code{font_options}}
-#'    and \link{\code{google_font_options}}.
+#' @param ... A series of \code{font_options}. See \code{font_options}
+#'    and \code{google_font_options}.
 #' @param path Path to export the stylesheet. The default value is \code{NULL} which will cause 
 #'    the stylesheet to be created in the working directory.
 #' @param filename Name of exported stylesheet. The default value is \code{"stylesheet.css"}.
@@ -71,10 +71,11 @@ cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
 #' @examples
 #' \dontrun{
 #' 
-#' verdana <- font_options("~/Desktop/verdana.ttf")
+#' verdana <- font_options("~/Desktop/verdana.ttf", weight=800)
 #' monaco <- font_options("~/Desktop/monaco-black.woff", font_name="Monaco")
 #' }
-font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
+font_options  <- function(path, font_name=NULL, 
+                          bold=F, italic=F, weight=400){
   # Determine file extension
   ext <- str_extract(basename(path), "\\..{3,4}$")
   
@@ -109,7 +110,7 @@ font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
 
 #' Specify font options for a Google font
 #' 
-#' You can browse Google fonts at \link{https://www.google.com/fonts}.
+#' You can browse Google fonts at \url{https://www.google.com/fonts}.
 #' 
 #' @param font_name The name of the font exactly as it appears on Google fonts. Case sensitive.
 #' @param bold If \code{TRUE} the \code{font-weight} will be set to \code{700}. The default value is \code{FALSE}.
@@ -122,7 +123,7 @@ font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
 #' @examples
 #' \dontrun{
 #' 
-#' open_sans <- google_font_options("Open Sans")
+#' open_sans <- google_font_options("Open Sans", weight=600)
 #' roboto <- google_font_options("Roboto", italic=T)
 #' }
 google_font_options <- function(font_name, bold=F, italic=F, weight=400){
