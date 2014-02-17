@@ -1,4 +1,4 @@
-#' Create a stylesheet with font URIs from a directory containing font files
+#' Create a stylesheet with custom settings using local and web fonts
 #' 
 #' 
 #' @param ... A series of \code{font_options}s. See \link{\code{font_options}}
@@ -19,7 +19,7 @@
 #' cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=T)
 #' 
 #' }
-cosmofont <- (..., path=NULL, filename="stylesheet.css", uri=F){
+cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
   # Capture settings
   fonts <- list(...)
   
@@ -33,21 +33,47 @@ cosmofont <- (..., path=NULL, filename="stylesheet.css", uri=F){
     fonts <- lapply(fonts, make_dataURI)
     
     # Make CSS file. Thank you Ramnath Vaidyanathan!
-    css <- paste(capture.output(cat(whisker.render(template, list(fonts = fonts)))), collapse = "\n")
+    css <- paste(capture.output(cat(whisker.render(whisker_template(), list(fonts = fonts)))), collapse = "\n")
     cat(css, file = file.path(path, filename))
-    invisible()
   } else {
+    # Write font files
+    lapply(fonts, write_font_file, path=path)
     
+    # Apply local URI
+    fonts <- lapply(fonts, local_URI)
+    
+    # Write CSS file
+    css <- paste(capture.output(cat(whisker.render(local_template(), list(fonts = fonts)))), collapse = "\n")
+    cat(css, file = file.path(path, filename))
   }
+  invisible()
 }
 
 #'
 
-cosmofont_easy <- function(path=NULL, dest=NULL, weight=400, style="normal", uri=F){
-  
-}
+#cosmofont_easy <- function(path=NULL, dest=NULL, weight=400, style="normal", uri=F){
+#  
+#}
 
-#'
+#' Specify font options for a local font file
+#' 
+#' Only font files of type \code{.ttf}, \code{.eot}, and \code{.woff} are compatible with this package.
+#' 
+#' @param path The path to the font file.
+#' @param font_name The name of the font as it will appear in the stylesheet. If \code{NULL} the name
+#'    of the file will be used. The default value is \code{NULL}.
+#' @param bold If \code{TRUE} the \code{font-weight} will be set to \code{700}. The default value is \code{FALSE}.
+#' @param italic If \code{TRUE} the \code{font-style} will be set to \code{italic}. The default value is \code{FALSE}.
+#' @param weight The numeric weight of the font. The default value is \code{400}. Setting this value will
+#'    override the value of \code{bold}.
+#' @export
+#' @importFrom stringr str_extract
+#' @examples
+#' \dontrun{
+#' 
+#' verdana <- font_options("~/Desktop/verdana.ttf")
+#' monaco <- font_options("~/Desktop/monaco-black.woff", font_name="Monaco")
+#' }
 font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
   # Determine file extension
   ext <- str_extract(basename(path), "\\..{3,4}$")
@@ -78,11 +104,27 @@ font_options  <- function(path, font_name=NULL, bold=F, italic=F, weight=400){
   # Return font option object
   list(name = font_name, weight = weight, style = font_style, format = font_format, 
        file = font_bin)
+  
 }
 
-#'
+#' Specify font options for a Google font
+#' 
+#' You can browse Google fonts at \link{https://www.google.com/fonts}.
+#' 
+#' @param font_name The name of the font exactly as it appears on Google fonts. Case sensitive.
+#' @param bold If \code{TRUE} the \code{font-weight} will be set to \code{700}. The default value is \code{FALSE}.
+#' @param italic If \code{TRUE} the \code{font-style} will be set to \code{italic}. The default value is \code{FALSE}.
+#' @param weight The numeric weight of the font. The default value is \code{400}. Setting this value will
+#'    override the value of \code{bold}.
+#' @export
 #' @importFrom stringr str_extract perl
 #' @importFrom httr GET content
+#' @examples
+#' \dontrun{
+#' 
+#' open_sans <- google_font_options("Open Sans")
+#' roboto <- google_font_options("Roboto", italic=T)
+#' }
 google_font_options <- function(font_name, bold=F, italic=F, weight=400){
   # Make sure weight is in the realm of sanity
   if(weight < 100 || weight > 1000){
@@ -154,4 +196,48 @@ make_dataURI <- function(font){
   
   font$dataURI <- dataURI(font$file, mime = font_mime)
   return(font)
+}
+
+local_URI <- function(font){
+  if(font$format == "ttf"){
+    font$format <- "truetype"
+    font$dataURI  <- paste0(font$name, ".ttf")
+  } else if(font$format == "eot"){
+    font$format <- "embedded-opentype"
+    font$dataURI  <- paste0(font$name, ".eot")
+  } else if(font$format == "woff"){
+    font$dataURI  <- paste0(font$name, ".woff")
+  } else {
+    stop("This font format is not supported.")
+  }
+  return(font)
+}
+
+whisker_template <- function(){
+"{{# fonts }}
+@font-face {
+  font-family: '{{{ name }}}';
+  font-style: {{{ style }}};
+  font-weight: {{{ weight }}};
+  src: url({{{ dataURI }}}) format('{{{ format }}}');
+}
+{{/ fonts }}"
+}
+
+local_template <- function(){
+"{{# fonts }}
+@font-face {
+  font-family: '{{{ name }}}';
+  font-style: {{{ style }}};
+  font-weight: {{{ weight }}};
+  src: url('{{{ dataURI }}}') format('{{{ format }}}');
+}
+{{/ fonts }}"
+}
+
+write_font_file <- function(font, path){
+  full_file_pathname <- file.path(path, paste0(font$name, ".", font$format))
+  if(!file.exists(full_file_pathname)){
+    writeBin(font$file, full_file_pathname)
+  }
 }
