@@ -10,7 +10,6 @@
 #'    If set to \code{FALSE} font files will be coppied into the directory specified by \code{path}.
 #'    The default value is \code{FALSE}. 
 #' @export
-#' @importFrom base64enc dataURI
 #' @importFrom whisker whisker.render 
 #' @examples
 #' \dontrun{
@@ -22,7 +21,24 @@
 #' }
 cosmofont <- (..., path=NULL, filename="stylesheet.css", uri=F){
   # Capture settings
-  settings <- list(...)
+  fonts <- list(...)
+  
+  # Set path if necessary
+  if(is.null(path)){
+    path <- getwd()
+  }
+  
+  if(uri){
+    # Make URIs
+    fonts <- lapply(fonts, make_dataURI)
+    
+    # Make CSS file. Thank you Ramnath Vaidyanathan!
+    css <- paste(capture.output(cat(whisker.render(template, list(fonts = fonts)))), collapse = "\n")
+    cat(css, file = file.path(path, filename))
+    invisible()
+  } else {
+    
+  }
 }
 
 #'
@@ -120,4 +136,22 @@ space2plus <- function(word){
 
 file_sieve <- function(file){
   grepl("\\.ttf|\\.eot|\\.woff", file)
+}
+
+#' @importFrom base64enc dataURI
+make_dataURI <- function(font){
+  if(font$format == "ttf"){
+    font_mime <- "application/x-font-ttf"
+    font$format <- "truetype"
+  } else if(font$format == "eot"){
+    font_mime <- "font/opentype"
+    font$format <- "embedded-opentype"
+  } else if(font$format == "woff"){
+    font_mime <- "application/x-font-woff"
+  } else {
+    stop("This font format is not supported.")
+  }
+  
+  font$dataURI <- dataURI(font$file, mime = font_mime)
+  return(font)
 }
