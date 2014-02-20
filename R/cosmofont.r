@@ -52,7 +52,7 @@ cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
 #'
 
 #cosmofont_easy <- function(path=NULL, dest=NULL, weight=400, style="normal", uri=F){
-#  
+#  Filter
 #}
 
 #' Specify font options for a local font file

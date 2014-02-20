@@ -1,3 +1,5 @@
+# cosmofont
+
 To install:
 
 ```
