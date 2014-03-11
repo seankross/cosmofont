@@ -34,7 +34,7 @@ cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
     
     # Make CSS file. Thank you Ramnath Vaidyanathan!
     css <- paste(capture.output(cat(whisker.render(whisker_template(), list(fonts = fonts)))), collapse = "\n")
-    cat(css, file = file.path(path, filename))
+    cat(css, file = file.path(path, filename), append=TRUE)
   } else {
     # Write font files
     lapply(fonts, write_font_file, path=path)
@@ -44,7 +44,7 @@ cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
     
     # Write CSS file
     css <- paste(capture.output(cat(whisker.render(local_template(), list(fonts = fonts)))), collapse = "\n")
-    cat(css, file = file.path(path, filename))
+    cat(css, file = file.path(path, filename), append=TRUE)
   }
   invisible()
 }
