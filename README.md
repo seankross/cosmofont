@@ -85,7 +85,7 @@ library(shiny)
 library(cosmofont)
 
 # Make a stylesheet if you haven't already
-cat("h1 { font-family: 'Great Vibes'; }\n", "stylesheet.css")
+cat("h1 { font-family: 'Great Vibes'; }\n", file = "stylesheet.css")
 
 # Get your favorite font!
 great_vibes <- google_font_options("Great Vibes")

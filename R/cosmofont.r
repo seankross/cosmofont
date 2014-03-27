@@ -14,12 +14,12 @@
 #' @examples
 #' \dontrun{
 #' 
-#' roboto <- google_font_options("Roboto", italic=T)
+#' roboto <- google_font_options("Roboto", italic=TRUE)
 #' newscycle <- font_options("~/Desktop/newscycle.ttf")
-#' cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=T)
+#' cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=TRUE)
 #' 
 #' }
-cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
+cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=FALSE){
   # Capture settings
   fonts <- list(...)
   
@@ -75,7 +75,7 @@ cosmofont <- function(..., path=NULL, filename="stylesheet.css", uri=F){
 #' monaco <- font_options("~/Desktop/monaco-black.woff", font_name="Monaco")
 #' }
 font_options  <- function(path, font_name=NULL, 
-                          bold=F, italic=F, weight=400){
+                          bold=FALSE, italic=FALSE, weight=400){
   # Determine file extension
   ext <- str_extract(basename(path), "\\..{3,4}$")
   
@@ -124,9 +124,9 @@ font_options  <- function(path, font_name=NULL,
 #' \dontrun{
 #' 
 #' open_sans <- google_font_options("Open Sans", weight=600)
-#' roboto <- google_font_options("Roboto", italic=T)
+#' roboto <- google_font_options("Roboto", italic=TRUE)
 #' }
-google_font_options <- function(font_name, bold=F, italic=F, weight=400){
+google_font_options <- function(font_name, bold=FALSE, italic=FALSE, weight=400){
   # Make sure weight is in the realm of sanity
   if(weight < 100 || weight > 1000){
     stop("weight must be between 100 and 1000")

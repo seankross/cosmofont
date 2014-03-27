@@ -2,7 +2,7 @@
 \alias{google_font_options}
 \title{Specify font options for a Google font}
 \usage{
-google_font_options(font_name, bold = F, italic = F, weight = 400)
+google_font_options(font_name, bold = FALSE, italic = FALSE, weight = 400)
 }
 \arguments{
   \item{font_name}{The name of the font exactly as it
@@ -27,7 +27,7 @@ You can browse Google fonts at
 \dontrun{
 
 open_sans <- google_font_options("Open Sans", weight=600)
-roboto <- google_font_options("Roboto", italic=T)
+roboto <- google_font_options("Roboto", italic=TRUE)
 }
 }
 

@@ -2,7 +2,7 @@
 \alias{cosmofont}
 \title{Create a stylesheet with custom settings using local and web fonts}
 \usage{
-cosmofont(..., path = NULL, filename = "stylesheet.css", uri = F)
+cosmofont(..., path = NULL, filename = "stylesheet.css", uri = FALSE)
 }
 \arguments{
   \item{...}{A series of \code{font_options}. See
@@ -27,9 +27,9 @@ web fonts
 \examples{
 \dontrun{
 
-roboto <- google_font_options("Roboto", italic=T)
+roboto <- google_font_options("Roboto", italic=TRUE)
 newscycle <- font_options("~/Desktop/newscycle.ttf")
-cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=T)
+cosmofont(roboto, newscycle, path="~/Desktop/fonts", uri=TRUE)
 
 }
 }

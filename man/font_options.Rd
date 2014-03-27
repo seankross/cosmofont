@@ -2,7 +2,8 @@
 \alias{font_options}
 \title{Specify font options for a local font file}
 \usage{
-font_options(path, font_name = NULL, bold = F, italic = F, weight = 400)
+font_options(path, font_name = NULL, bold = FALSE, italic = FALSE,
+  weight = 400)
 }
 \arguments{
   \item{path}{The path to the font file.}
