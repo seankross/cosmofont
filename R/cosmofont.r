@@ -174,7 +174,7 @@ google_font_options <- function(font_name, bold=FALSE, italic=FALSE, weight=400)
 }
 
 space2plus <- function(word){
-  sub(" ", "+", word, fixed=T)
+  gsub(" ", "+", word, fixed=T)
 }
 
 file_sieve <- function(file){
